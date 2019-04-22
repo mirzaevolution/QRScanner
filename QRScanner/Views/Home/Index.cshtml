@@ -36,6 +36,8 @@
         <div id="CameraMenu" class="tab-pane fade">
             <h3>Camera Capture QR Code Reader</h3>
             <p class="text-danger">Please allow camera popup in your browser.</p>
+            <p class="text-danger">This only works on iOS6+ or Android 3.0+.</p>
+
             <br />
             <div class="row">
                 <div class="col-md-4">
@@ -65,13 +67,11 @@
                 <div class="row">
                     <div class="col-md-4">
 
-                        <div class="input-group">
-                            <input type="file" id="WebQRImage" />
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary" type="button" id="ButtonWebUpload">
-                                    <i class="glyphicon glyphicon-upload"></i>
-                                </button>
-                            </div>
+                        <div class="form-group">
+                            <input type="file" id="WebQRImage" onchange="Events.EncodeImageFileAsUrl()"/><br />
+                            <button class="btn btn-primary" type="button" id="ButtonWebUpload">
+                                <i class="glyphicon glyphicon-upload"></i> Upload
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -105,17 +105,28 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="camera-block" id="CameraBox"></div>
-                        <br />
-                        <button type="button" id="ButtonCameraScan" class="btn btn-primary">Scan</button>
+
+                        <div class="form-group">
+                            <input id="MobileQRImage" type="file" accept="image/*" capture="camera" onchange="Events.OnCameraCaptured()" /> <br />
+                            <button class="btn btn-primary" type="button" id="ButtonMobileUpload">
+                                <i class="glyphicon glyphicon-upload"></i> Upload
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6" id="MobileQRImagePreview">
+
                     </div>
                 </div>
                 <br />
                 @*<div class="row">
-                    <div class="col-md-4" id="CameraBoxResult">
+            <div class="col-md-4" id="CameraBoxResult">
 
-                    </div>
-                </div>*@
+            </div>
+        </div>*@
                 <br />
                 <div id="ErrorTextMobile" class="alert alert-danger" style="display:none">
 

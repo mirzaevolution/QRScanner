@@ -4,7 +4,7 @@ let Events = {
     Init: function () {
         this.ScanQRClick();
         this.ButtonWebModalClose();
-        this.CameraInit();
+        //this.CameraInit();
     },
     EncodeImageFileAsUrl: function () {
 
@@ -23,7 +23,29 @@ let Events = {
                 newImage.src = srcData;
 
                 document.getElementById("WebQRImagePreview").innerHTML = newImage.outerHTML;
-                qrHub.server.readQRCode(srcData,"desktop");
+                //console.log("Converted Base64 version is " + document.getElementById("WebQRImagePreview").innerHTML);
+            };
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    },
+    OnCameraCaptured: function () {
+        var filesSelected = document.getElementById("MobileQRImage").files;
+        if (filesSelected.length > 0) {
+            var fileToLoad = filesSelected[0];
+
+            var fileReader = new FileReader();
+
+            fileReader.onload = function (fileLoadedEvent) {
+              
+                var srcData = fileLoadedEvent.target.result; // <--- data: base64
+
+                var newImage = document.createElement('img');
+
+                newImage.classList.add("img-responsive");
+                newImage.src = srcData;
+                document.getElementById("MobileQRImagePreview").innerHTML = newImage.outerHTML;
+
+                
                 //console.log("Converted Base64 version is " + document.getElementById("WebQRImagePreview").innerHTML);
             };
             fileReader.readAsDataURL(fileToLoad);
@@ -39,7 +61,59 @@ let Events = {
 
         });
         $("#ButtonWebUpload").click(function () {
-            Events.EncodeImageFileAsUrl();
+            var srcData = $("#WebQRImagePreview img").attr("src");
+            $.blockUI({ message: 'Loading..' });
+            qrHub.server.readQRCode(srcData, "desktop");
+
+        });
+        $("#ButtonMobileUpload").click(function () {
+            var filesSelected = document.getElementById("MobileQRImage").files;
+            if (filesSelected.length > 0) {
+                var srcData = $("#MobileQRImagePreview img").attr("src");
+
+                if (filesSelected[0].size <= 128000) {
+                    $.blockUI({ message: 'Loading..' });
+
+                    qrHub.server.readQRCode(srcData, "mobile");
+
+                } else {
+
+                    $.ajax({
+                        url: "/home/ScanQRCode",
+                        type: "POST",
+                        data: {
+                            base64Image: srcData,
+                            id: "mobile"
+                        },
+                        beforeSend: function () {
+                            $.blockUI({ message: 'Loading..' });
+
+                        },
+                        success: function (response) {
+                            $.unblockUI();
+
+                            if (response.Status.IsSuccess) {
+
+                                $("#QrContentMobile").val(response.Data.Content);
+                                alert("QR code decoded successfully");
+                                $("#ButtonMobileModalClose").trigger("click");
+                            } else {
+                                var errorList = "<ul>";
+                                var errors = response.Status.Errors;
+                                for (var i = 0; i < errors.length; i++) {
+                                    errorList += "<li>" + errors[i] + "</li>";
+                                }
+                                $("#ErrorTextMobile").text(errorList);
+                                $("#ErrorTextMobile").show();
+                            }
+
+                        },
+                        error: function () {
+                            $.unblockUI();
+                        }
+                    });
+                }
+            }
         });
         $("#ButtonCameraScan").click(function () {
             Webcam.snap(function (data_uri) {
@@ -59,7 +133,9 @@ let Events = {
         $("#ButtonMobileModalClose").click(function () {
             $("#ErrorTextMobile").text("");
             $("#ErrorTextMobile").hide();
-            $("#CameraBoxResult").empty();
+
+            $("#MobileQRImage").val("");
+            $("#MobileQRImagePreview").empty();
         });
     },
     CameraInit: function () {
@@ -79,7 +155,8 @@ let SignalRClientHandlers = {
         this.OnError();
     },
     OnError: function () {
-        qrHub.client.onError = function (response,id) {
+        qrHub.client.onError = function (response, id) {
+            $.unblockUI();
             if (typeof response == "string") {
                 if (id == "desktop") {
                     $("#ErrorText").text(response);
@@ -112,7 +189,8 @@ let SignalRClientHandlers = {
         };
     },
     OnDecodeSuccess: function () {
-        qrHub.client.onDecodeSuccess = function (response,id) {
+        qrHub.client.onDecodeSuccess = function (response, id) {
+            $.unblockUI();
             if (response) {
                 console.log(response);
                 if (response.Content) {

@@ -17,6 +17,7 @@ namespace QRScanner.Hubs
         {
             try
             {
+                
                 if (!string.IsNullOrEmpty(base64Image))
                 {
                     string pattern = @"(data:image/jpeg;base64,|data:image/png;base64,)";
