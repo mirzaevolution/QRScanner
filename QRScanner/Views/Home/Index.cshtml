@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "QR Code Scanner";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <br />
+            <img class="img-responsive" src="~/Content/qr-icon.jpg" style="height:120px;" />
+
+        </div>
+    </div>
+    <br />
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#UploadMenu">Upload</a></li>
+        <li><a data-toggle="tab" href="#CameraMenu">Camera</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="UploadMenu" class="tab-pane fade in active">
+            <h3>Upload QR Code Image <i><small class="text-info">(jpg/png)</small></i></h3>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" id="QrContent" placeholder="QR Code Content" class="form-control" />
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary" type="button" id="ButtonOpenWebModal">
+                                <i class="glyphicon glyphicon-screenshot"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="CameraMenu" class="tab-pane fade">
+            <h3>Camera Capture QR Code Reader</h3>
+            <p class="text-danger">Please allow camera popup in your browser.</p>
+            <br />
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" id="QrContentMobile" placeholder="QR Code Content" class="form-control" />
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary" type="button" id="ButtonOpenMobileModal">
+                                <i class="glyphicon glyphicon-screenshot"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="WebModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Upload QR Code Image</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+
+                        <div class="input-group">
+                            <input type="file" id="WebQRImage" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary" type="button" id="ButtonWebUpload">
+                                    <i class="glyphicon glyphicon-upload"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6" id="WebQRImagePreview">
+
+                    </div>
+                </div>
+                <br />
+                <div id="ErrorText" class="alert alert-danger" style="display:none">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ButtonWebModalClose" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="MobileModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Capture your QR Code</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="camera-block" id="CameraBox"></div>
+                        <br />
+                        <button type="button" id="ButtonCameraScan" class="btn btn-primary">Scan</button>
+                    </div>
+                </div>
+                <br />
+                @*<div class="row">
+                    <div class="col-md-4" id="CameraBoxResult">
+
+                    </div>
+                </div>*@
+                <br />
+                <div id="ErrorTextMobile" class="alert alert-danger" style="display:none">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ButtonMobileModalClose" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script src="/Scripts/QRCodeHub/QRScannerClient.js"></script>
+}
