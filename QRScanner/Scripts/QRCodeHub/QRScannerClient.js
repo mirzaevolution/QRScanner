@@ -399,9 +399,16 @@ let RealtimeScanner = {
             $("#VideoDivStandard").html(vidhtml);
             v = document.getElementById("VideoCoreStandard");
 
+            if (options==true) {
+                options = '{ facingMode: { exact: "environment" } }';
+            }
 
             if (n.mediaDevices.getUserMedia) {
-                n.mediaDevices.getUserMedia({ video: options, audio: false }).
+                var optionsToUse = { video: options, audio: false };
+                if (options == true) {
+                    optionsToUse = { video: { facingMode: { exact: "environment" } }, audio: false };
+                }
+                n.mediaDevices.getUserMedia(optionsToUse).
                     then(function (stream) {
                         RealtimeScanner.StandardScanner.OnSuccess(stream);
                     }).catch(function (error) {
@@ -409,14 +416,18 @@ let RealtimeScanner = {
                     });
             }
             else
+                var optionsToUse = { video: options, audio: false };
+                if (options == true) {
+                    optionsToUse = { video: { facingMode: { exact: "environment" } }, audio: false };
+                }
                 if (n.getUserMedia) {
                     webkit = true;
-                    n.getUserMedia({ video: options, audio: false }, success, error);
+                    n.getUserMedia(optionsToUse, RealtimeScanner.StandardScanner.OnSuccess, RealtimeScanner.StandardScanner.OnError);
                 }
                 else
                     if (n.webkitGetUserMedia) {
                         webkit = true;
-                        n.webkitGetUserMedia({ video: options, audio: false }, success, error);
+                        n.webkitGetUserMedia(optionsToUse, RealtimeScanner.StandardScanner.OnSuccess, RealtimeScanner.StandardScanner.OnError);
                     }
             
 
