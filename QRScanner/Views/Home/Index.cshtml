@@ -1,31 +1,33 @@
 ﻿@{
     ViewBag.Title = "QR Code Scanner";
 }
-
+<link href="~/Content/qrcode-index.css" rel="stylesheet" />
 <div class="container">
-    <div class="row">
+    @*<div class="row">
         <div class="col-sm-3">
             <br />
-            <img class="img-responsive" src="~/Content/qr-icon.jpg" style="height:120px;" />
-
+            <img class="img-responsive" src="~/Content/brand.jpg" style="height:70px;" />
         </div>
-    </div>
+    </div>*@
     <br />
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#UploadMenu">Upload</a></li>
-        <li><a data-toggle="tab" href="#CameraMenu">Camera</a></li>
+        <li class="active"><a data-toggle="tab" href="#CameraMenu">Manual Scan</a></li>
+        <li><a data-toggle="tab" href="#CameraMenuDetectUrl">URL Manual Scan</a></li>
+
+        <li><a data-toggle="tab" href="#CameraMenuRealtime" onclick="RealtimeScanner.StandardScanner.InitScanner()">Realtime Scan</a></li>
+        <li><a data-toggle="tab" href="#UploadMenu">Upload</a></li>
     </ul>
-
     <div class="tab-content">
-        <div id="UploadMenu" class="tab-pane fade in active">
-            <h3>Upload QR Code Image <i><small class="text-info">(jpg/png)</small></i></h3>
-
+        <div id="CameraMenu" class="tab-pane fade  in active">
+            <h4 class="text-primary">Manual QR Code Scan</h4>
             <div class="row">
                 <div class="col-md-4">
                     <div class="input-group">
-                        <input type="text" id="QrContent" placeholder="QR Code Content" class="form-control" />
+                        <input type="text" id="QrContentMobile" placeholder="QR Code Content" class="form-control" style="z-index:0" />
+                        <input id="MobileQRImage" type="file" accept="image/*" capture="camera" class="hidden-input-file" onchange="Events.OnCameraCaptured()" style="display:none" /> <br />
+
                         <div class="input-group-btn">
-                            <button class="btn btn-primary" type="button" id="ButtonOpenWebModal">
+                            <button class="btn btn-primary z-index" type="button" id="ButtonManualQRScan" style="z-index:0">
                                 <i class="glyphicon glyphicon-screenshot"></i>
                             </button>
                         </div>
@@ -33,18 +35,49 @@
                 </div>
             </div>
         </div>
-        <div id="CameraMenu" class="tab-pane fade">
-            <h3>Camera Capture QR Code Reader</h3>
-            <p class="text-danger">Please allow camera popup in your browser.</p>
-            <p class="text-danger">This only works on iOS6+ or Android 3.0+.</p>
+        <div id="CameraMenuDetectUrl" class="tab-pane fade">
+            <h4 class="text-primary">Realtime QR Code Scanner</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <input id="MobileQRImageUrlScan" type="file" accept="image/*" capture="camera" class="hidden-input-file" onchange="Events.OnCameraCapturedUrl()" style="display:none" /> <br />
 
-            <br />
+                    <div>
+                        <button class="btn btn-primary z-index" type="button" id="ButtonManualQRScanUrl" style="z-index:0">
+                            <i class="glyphicon glyphicon-screenshot"></i> Scan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="CameraMenuRealtime" class="tab-pane fade">
+            <h4 class="text-primary">Realtime QR Code Scanner</h4>
+            <p class="text-danger"><strong>NB:</strong> Please allow camera popup to proceed. <br /><br /> <button id="ButtonRefreshCameraStandard" class="btn btn-success"><i class="glyphicon glyphicon-refresh"></i></button></p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="video-container" id="VideoDivStandard">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="scan-result" id="ScanResultStandard">[#]....Detecting</div>
+                </div>
+            </div>
+
+        </div>
+        <div id="UploadMenu" class="tab-pane fade">
+            <h4>Upload QR Code Image <i><small class="text-info">(jpg/png)</small></i></h4>
+            <p class="text-danger"><strong>NB:</strong> Max size allowed is 64KB.</p>
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="input-group">
-                        <input type="text" id="QrContentMobile" placeholder="QR Code Content" class="form-control" />
+                        <input type="text" id="QrContent" placeholder="QR Code Content" class="form-control " style="z-index:0" />
                         <div class="input-group-btn">
-                            <button class="btn btn-primary" type="button" id="ButtonOpenMobileModal">
+                            <button class="btn btn-primary z-index" type="button" id="ButtonOpenWebModal" style="z-index:0">
                                 <i class="glyphicon glyphicon-screenshot"></i>
                             </button>
                         </div>
@@ -54,7 +87,6 @@
         </div>
     </div>
 </div>
-
 <div id="WebModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
@@ -66,11 +98,10 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-4">
-
                         <div class="form-group">
-                            <input type="file" id="WebQRImage" onchange="Events.EncodeImageFileAsUrl()"/><br />
+                            <input type="file" id="WebQRImage" onchange="CoreMethods.EncodeImageFileAsUrl()" /><br />
                             <button class="btn btn-primary" type="button" id="ButtonWebUpload">
-                                <i class="glyphicon glyphicon-upload"></i> Upload
+                                <i class="glyphicon glyphicon-upload"></i> Decode QR
                             </button>
                         </div>
                     </div>
@@ -78,22 +109,18 @@
                 <br />
                 <div class="row">
                     <div class="col-md-6" id="WebQRImagePreview">
-
                     </div>
                 </div>
                 <br />
                 <div id="ErrorText" class="alert alert-danger" style="display:none">
-
                 </div>
             </div>
             <div class="modal-footer">
                 <button id="ButtonWebModalClose" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
-
     </div>
 </div>
-
 <div id="MobileModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
@@ -105,44 +132,58 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-4">
-
                         <div class="form-group">
-                            <input id="MobileQRImage" type="file" accept="image/*" capture="camera" onchange="Events.OnCameraCaptured()" /> <br />
+                            @*<input id="MobileQRImage" type="file" accept="image/*" capture="camera" onchange="Events.OnCameraCaptured()" />*@ <br />
                             <button class="btn btn-primary" type="button" id="ButtonMobileUpload">
-                                <i class="glyphicon glyphicon-upload"></i> Upload
+                                <i class="glyphicon glyphicon-upload"></i> Decode QR
                             </button>
                         </div>
                     </div>
-
                 </div>
                 <br />
                 <div class="row">
                     <div class="col-md-6" id="MobileQRImagePreview">
-
                     </div>
                 </div>
                 <br />
                 @*<div class="row">
-            <div class="col-md-4" id="CameraBoxResult">
+                        <div class="col-md-4" id="CameraBoxResult">
 
-            </div>
-        </div>*@
+                        </div>
+                    </div>*@
                 <br />
                 <div id="ErrorTextMobile" class="alert alert-danger" style="display:none">
-
                 </div>
             </div>
             <div class="modal-footer">
                 <button id="ButtonMobileModalClose" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
-
     </div>
 </div>
 
 @section scripts{
-
     <script src="/Scripts/jquery.signalR-2.4.1.min.js"></script>
     <script src="/signalr/hubs"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/grid.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/version.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/detector.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/formatinf.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/errorlevel.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/bitmat.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/datablock.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/bmparser.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/datamask.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/rsdecoder.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/gf256poly.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/gf256.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/decoder.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/qrcode.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/findpat.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/alignpat.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsqrcode-master/src/databr.js"></script>
+    @*<script src="~/Scripts/webqr/llqrcode.js"></script>*@
+    @*<script src="~/Scripts/webqr/plusone.js"></script>*@
     <script src="/Scripts/QRCodeHub/QRScannerClient.js"></script>
 }
+<canvas id="qr-canvas" style="width: 800px; height: 600px;"></canvas>

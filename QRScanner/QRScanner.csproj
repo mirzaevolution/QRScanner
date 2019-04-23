@@ -83,6 +83,9 @@
     <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -110,10 +113,6 @@
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -168,11 +167,13 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\brand.jpg" />
     <Content Include="Content\qr-icon.jpg" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\qrcode-index.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -180,7 +181,9 @@
     <Content Include="Scripts\blockUI.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\QRCodeScannerMGR - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\QRCodeScannerMGR - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\QRCodeScannerMGR - Web Deploy1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -193,6 +196,24 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jsqrcode-master\src\alignpat.js" />
+    <Content Include="Scripts\jsqrcode-master\src\bitmat.js" />
+    <Content Include="Scripts\jsqrcode-master\src\bmparser.js" />
+    <Content Include="Scripts\jsqrcode-master\src\datablock.js" />
+    <Content Include="Scripts\jsqrcode-master\src\databr.js" />
+    <Content Include="Scripts\jsqrcode-master\src\datamask.js" />
+    <Content Include="Scripts\jsqrcode-master\src\decoder.js" />
+    <Content Include="Scripts\jsqrcode-master\src\detector.js" />
+    <Content Include="Scripts\jsqrcode-master\src\errorlevel.js" />
+    <Content Include="Scripts\jsqrcode-master\src\findpat.js" />
+    <Content Include="Scripts\jsqrcode-master\src\formatinf.js" />
+    <Content Include="Scripts\jsqrcode-master\src\gf256.js" />
+    <Content Include="Scripts\jsqrcode-master\src\gf256poly.js" />
+    <Content Include="Scripts\jsqrcode-master\src\grid.js" />
+    <Content Include="Scripts\jsqrcode-master\src\qrcode.js" />
+    <Content Include="Scripts\jsqrcode-master\src\rsdecoder.js" />
+    <Content Include="Scripts\jsqrcode-master\src\test.html" />
+    <Content Include="Scripts\jsqrcode-master\src\version.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\QRCodeHub\QRScannerClient.js" />
     <Content Include="Scripts\webcamjs-1.0.25\demos\basic.html" />
@@ -218,6 +239,8 @@
     <Content Include="Scripts\webcamjs-1.0.25\webcam.js" />
     <Content Include="Scripts\webcamjs-1.0.25\webcam.min.js" />
     <Content Include="Scripts\webcamjs-1.0.25\webcam.swf" />
+    <Content Include="Scripts\webqr\llqrcode.js" />
+    <Content Include="Scripts\webqr\plusone.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

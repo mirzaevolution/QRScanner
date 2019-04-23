@@ -21,23 +21,23 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Scanner", "Index", "Home")</li>
                     <li><a href="https://www.the-qrcode-generator.com/" target="_blank">3rd Party QR Code Generator</a></li>
-
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        
+    <div class="container body-content " style="height:1200px;">
+
         @RenderBody()
         <div></div>
 
-        <footer class="footer">
-            <p>&copy; @DateTime.Now.Year - QR Code Scanner</p>
-            <p>Powered by: <a href="http://linkedin.com" target="_blank">Mirza Ghulam Rasyid</a></p>
-
-        </footer>
     </div>
-
+    <footer class="footer">
+        <p>
+            &copy; @DateTime.Now.Year - QR Code Scanner<br />
+            Powered by: <a href="http://linkedin.com" target="_blank">Mirza Ghulam Rasyid</a>
+        </p>
+        
+    </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/3rdParties")
